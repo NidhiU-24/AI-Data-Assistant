@@ -35,6 +35,9 @@ def chat():
 # ---------- IMAGE ANALYSIS ----------
 @app.route('/analyze_image', methods=['POST'])
 def analyze_image():
+    if 'image' not in request.files:
+        return jsonify({"error": "No image file received"}), 400
+
     file = request.files['image']
     img = Image.open(file.stream)
 
@@ -50,8 +53,10 @@ def analyze_image():
             'images': [img_base64]
         }]
     )
+
     caption = response['message']['content']
     return jsonify({'caption': caption})
+
 
 # ---------- CSV ANALYSIS ----------
 @app.route("/analyze_csv", methods=["POST"])
